@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ruoyi.system.mapper.SysCourseSigninMapper">
+
+    <!-- 课程签到结果映射 -->
+    <resultMap id="SysCourseSigninResult" type="com.ruoyi.system.domain.SysCourseSignin">
+        <id property="id" column="id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="title" column="title"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <!-- 根据ID查询 -->
+    <select id="selectCourseSigninById" resultMap="SysCourseSigninResult">
+        SELECT * FROM sys_course_signin
+        WHERE id = #{signinId}
+    </select>
+
+    <!-- 查询列表（条件可扩展） -->
+    <select id="selectCourseSigninList" resultMap="SysCourseSigninResult">
+        SELECT * FROM sys_course_signin
+        <where>
+            <if test="courseId != null"> AND course_id = #{courseId} </if>
+            <if test="deptId != null"> AND dept_id = #{deptId} </if>
+            <if test="title != null and title != ''"> AND title LIKE concat('%', #{title}, '%') </if>
+            <if test="status != null and status != ''"> AND status = #{status} </if>
+            <if test="startTime != null"> AND start_time &gt;= #{startTime} </if>
+            <if test="endTime != null"> AND end_time &lt;= #{endTime} </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 新增签到 -->
+    <insert id="insertCourseSignin" parameterType="com.ruoyi.system.domain.SysCourseSignin" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_course_signin
+        (course_id, dept_id, title, start_time, end_time, status, create_by, create_time)
+        VALUES
+        (#{courseId}, #{deptId}, #{title}, #{startTime}, #{endTime}, #{status}, #{createBy}, NOW())
+    </insert>
+
+    <!-- 修改签到 -->
+    <update id="updateCourseSignin" parameterType="com.ruoyi.system.domain.SysCourseSignin">
+        UPDATE sys_course_signin
+        <set>
+            <if test="courseId != null"> course_id = #{courseId}, </if>
+            <if test="deptId != null"> dept_id = #{deptId}, </if>
+            <if test="title != null"> title = #{title}, </if>
+            <if test="startTime != null"> start_time = #{startTime}, </if>
+            <if test="endTime != null"> end_time = #{endTime}, </if>
+            <if test="status != null"> status = #{status}, </if>
+            <if test="updateBy != null"> update_by = #{updateBy}, </if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除单条记录 -->
+    <delete id="deleteCourseSigninById" parameterType="Long">
+        DELETE FROM sys_course_signin WHERE id = #{signinId}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="deleteCourseSigninByIds" parameterType="Long">
+        DELETE FROM sys_course_signin WHERE id IN
+        <foreach collection="signinIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 更新签到状态 -->
+    <update id="updateStatus">
+        UPDATE sys_course_signin
+        SET status = #{status},
+            update_by = #{updateBy},
+            update_time = NOW()
+        WHERE id = #{signinId}
+    </update>
+
+</mapper>

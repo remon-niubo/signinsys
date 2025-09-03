@@ -27,6 +27,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from sys_dept d
     </sql>
     
+    <select id="selectDeptListAll" resultMap="SysDeptResult">
+	    select dept_id, parent_id, dept_name, order_num, status
+	    from sys_dept
+	    where status = '0'
+	    order by parent_id, order_num
+	</select>
+
+    
 	<select id="selectDeptList" parameterType="SysDept" resultMap="SysDeptResult">
         <include refid="selectDeptVo"/>
         where d.del_flag = '0'

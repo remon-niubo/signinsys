@@ -129,4 +129,15 @@ public class SysDeptController extends BaseController
         deptService.checkDeptDataScope(deptId);
         return toAjax(deptService.deleteDeptById(deptId));
     }
+    
+    /**
+     * 用户申请时获取所有部门（忽略数据权限）
+     */
+    @GetMapping("/treeselectAll")
+    public AjaxResult treeselectAll() {
+        List<SysDept> depts = deptService.selectDeptListAll();
+        return AjaxResult.success(deptService.buildDeptTreeSelect(depts));
+    }
+
+
 }

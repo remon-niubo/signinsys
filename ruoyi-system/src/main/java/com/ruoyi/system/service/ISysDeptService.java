@@ -18,6 +18,14 @@ public interface ISysDeptService
      * @return 部门信息集合
      */
     public List<SysDept> selectDeptList(SysDept dept);
+    
+    /**
+     * 查询所有部门（忽略数据权限）
+     * 
+     * @return 部门信息集合
+     */
+    public List<SysDept> selectDeptListAll();
+
 
     /**
      * 查询部门树结构信息

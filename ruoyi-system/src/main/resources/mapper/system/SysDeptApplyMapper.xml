@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysDeptApplyMapper">
+
+  <resultMap id="SysDeptApplyResult" type="com.ruoyi.system.domain.SysDeptApply">
+    <id     column="apply_id"   property="applyId"/>
+    <result column="user_id"    property="userId"/>
+    <result column="dept_id"    property="deptId"/>
+    <result column="status"     property="status"/>
+    <result column="remark"     property="remark"/>
+    <result column="create_by"  property="createBy"/>
+    <result column="create_time" property="createTime"/>
+    <result column="update_by"  property="updateBy"/>
+    <result column="update_time" property="updateTime"/>
+    <!-- 扩展字段 -->
+    <result column="user_name"  property="userName"/>
+    <result column="nick_name"  property="nickName"/>
+    <result column="dept_name"  property="deptName"/>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    a.apply_id, a.user_id, a.dept_id, a.status, a.remark, a.create_by, a.create_time, a.update_by, a.update_time
+  </sql>
+
+  <select id="selectDeptApplyById" resultMap="SysDeptApplyResult">
+    SELECT
+      <include refid="Base_Column_List"/>,
+      u.user_name, u.nick_name,
+      d.dept_name
+    FROM sys_dept_apply a
+    LEFT JOIN sys_user u ON u.user_id = a.user_id
+    LEFT JOIN sys_dept d ON d.dept_id = a.dept_id
+    WHERE a.apply_id = #{applyId}
+  </select>
+
+  <select id="selectDeptApplyList" resultMap="SysDeptApplyResult">
+    SELECT
+      <include refid="Base_Column_List"/>,
+      u.user_name, u.nick_name,
+      d.dept_name
+    FROM sys_dept_apply a
+    LEFT JOIN sys_user u ON u.user_id = a.user_id
+    LEFT JOIN sys_dept d ON d.dept_id = a.dept_id
+    <where>
+      <if test="status != null and status != ''">
+        AND a.status = #{status}
+      </if>
+      <if test="userId != null">
+        AND a.user_id = #{userId}
+      </if>
+      <if test="deptId != null">
+        AND a.dept_id = #{deptId}
+      </if>
+      <if test="params != null and params.beginTime != null and params.beginTime != ''">
+        AND a.create_time &gt;= #{params.beginTime}
+      </if>
+      <if test="params != null and params.endTime != null and params.endTime != ''">
+        AND a.create_time &lt;= #{params.endTime}
+      </if>
+    </where>
+    ORDER BY a.create_time DESC
+  </select>
+
+  <insert id="insertDeptApply" parameterType="com.ruoyi.system.domain.SysDeptApply" useGeneratedKeys="true" keyProperty="applyId">
+    INSERT INTO sys_dept_apply (user_id, dept_id, status, remark, create_by, create_time, update_by, update_time)
+    VALUES (#{userId}, #{deptId}, #{status}, #{remark}, #{createBy}, NOW(), #{updateBy}, NOW())
+  </insert>
+
+  <update id="updateDeptApply" parameterType="com.ruoyi.system.domain.SysDeptApply">
+    UPDATE sys_dept_apply
+    SET user_id = #{userId},
+        dept_id = #{deptId},
+        status = #{status},
+        remark = #{remark},
+        update_by = #{updateBy},
+        update_time = NOW()
+    WHERE apply_id = #{applyId}
+  </update>
+
+  <update id="updateStatus">
+    UPDATE sys_dept_apply
+    SET status = #{status},
+        update_by = #{updateBy},
+        update_time = NOW()
+    WHERE apply_id = #{applyId}
+  </update>
+
+  <delete id="deleteDeptApplyById">
+    DELETE FROM sys_dept_apply WHERE apply_id = #{applyId}
+  </delete>
+
+  <delete id="deleteDeptApplyByIds">
+    DELETE FROM sys_dept_apply WHERE apply_id IN
+    <foreach collection="array" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
+
+</mapper>
