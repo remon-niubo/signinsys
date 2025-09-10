@@ -335,6 +335,12 @@ export default {
       this.title = "添加班级"
       listDept().then(response => {
         this.deptOptions = this.handleTree(response.data, "deptId")
+        // 如果没有父节点，则默认选择根节点
+        if (row == undefined) {
+          this.$nextTick(() => {
+            this.form.parentId = 0
+          })
+        }
       })
     },
     /** 展开/折叠操作 */
@@ -365,6 +371,11 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          // 确保parentId不为undefined
+          if (this.form.parentId === undefined) {
+            this.form.parentId = 0
+          }
+          
           if (this.form.deptId != undefined) {
             updateDept(this.form).then(response => {
               this.$modal.msgSuccess("修改成功")

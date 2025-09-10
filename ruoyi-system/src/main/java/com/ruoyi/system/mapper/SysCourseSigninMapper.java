@@ -32,24 +32,24 @@ public interface SysCourseSigninMapper {
     /**
      * 新增课程签到
      * 
-     * @param courseSignin 课程签到对象
-     * @return 新增操作影响的函数
+     * @param courseSignin 课程签到信息
+     * @return 结果
      */
     int insertCourseSignin(SysCourseSignin courseSignin);
 
     /**
      * 修改课程签到
      * 
-     * @param courseSignin 课程签到对象
-     * @return 修改操作影响的行数
+     * @param courseSignin 课程签到信息
+     * @return 结果
      */
     int updateCourseSignin(SysCourseSignin courseSignin);
 
     /**
-     * 删除课程签到
+     * 删除课程签到（根据ID）
      * 
      * @param signinId 课程签到ID
-     * @return 删除操作影响的行数
+     * @return 结果
      */
     int deleteCourseSigninById(Long signinId);
 
@@ -57,20 +57,19 @@ public interface SysCourseSigninMapper {
      * 批量删除课程签到
      * 
      * @param signinIds 需要删除的课程签到ID数组
-     * @return 删除操作影响的行数
+     * @return 结果
      */
     int deleteCourseSigninByIds(Long[] signinIds);
-
+    
     /**
-     * 更新课程签到状态
-     *
-     * @param signinId 课程签到ID
-     * @param status 更新后的状态值
-     * @param updateBy 执行更新的用户
-     * @return 更新操作影响的行数
+     * 更新签到状态
+     * 
+     * @param signinId 签到ID
+     * @param status 状态
+     * @param updateBy 更新人
+     * @return 结果
      */
-    int updateStatus(@Param("signinId") Long signinId,
-                    @Param("status") String status,
-                    @Param("updateBy") String updateBy);
+    int updateStatus(@Param("signinId") Long signinId, 
+                     @Param("status") String status, 
+                     @Param("updateBy") String updateBy);
 }
-

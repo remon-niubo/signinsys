@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-card>
       <div slot="header" class="clearfix">
-        <span>部门课程管理</span>
+        <span>课程管理</span>
       </div>
       
       <el-row :gutter="10" class="mb8">
@@ -44,11 +44,15 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column prop="courseId" label="ID" width="80" />
-        <el-table-column prop="deptId" label="部门ID" width="120" />
-        <el-table-column prop="deptName" label="部门名称" width="120" />
-        <el-table-column prop="courseName" label="课程名称" />
-        <el-table-column prop="courseDesc" label="课程描述" />
+        <el-table-column prop="courseId" label="课程ID" width="80" />
+        <el-table-column prop="name" label="课程名称" width="120" />
+        <el-table-column prop="deptId" label="所属班级ID" width="120" />
+        <el-table-column prop="deptName" label="所属班级名称" />
+        
+        <el-table-column prop="brief" label="课程描述" />
+        <el-table-column prop="size" label="当前人数" width="100" />
+        <el-table-column prop="cap" label="班级容量" width="100" />
+        <el-table-column prop="coverURL" label="封面URL" />
         <el-table-column label="操作" width="150" v-hasPermi="['system:deptCourse:edit','system:deptCourse:remove']">
           <template slot-scope="scope">
             <el-button 
@@ -81,11 +85,11 @@
             placeholder="请选择所属部门"
           />
         </el-form-item>
-        <el-form-item label="课程名称" prop="courseName">
-          <el-input v-model="form.courseName" placeholder="请输入课程名称" />
+        <el-form-item label="课程名称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入课程名称" />
         </el-form-item>
-        <el-form-item label="课程描述" prop="courseDesc">
-          <el-input type="textarea" v-model="form.courseDesc" placeholder="请输入课程描述" />
+        <el-form-item label="课程描述" prop="brief">
+          <el-input type="textarea" v-model="form.brief" placeholder="请输入课程描述" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -123,14 +127,14 @@ export default {
       form: {
         courseId: undefined,
         deptId: undefined,
-        courseName: "",
-        courseDesc: ""
+        name: "",
+        brief: ""
       },
       rules: {
         deptId: [
           { required: true, message: "所属部门不能为空", trigger: "blur" }
         ],
-        courseName: [
+        name: [
           { required: true, message: "课程名称不能为空", trigger: "blur" }
         ]
       }
@@ -176,8 +180,8 @@ export default {
       this.form = {
         courseId: undefined,
         deptId: undefined,
-        courseName: "",
-        courseDesc: ""
+        name: "",
+        brief: ""
       };
       if (this.$refs.form) {
         this.$refs.form.resetFields();

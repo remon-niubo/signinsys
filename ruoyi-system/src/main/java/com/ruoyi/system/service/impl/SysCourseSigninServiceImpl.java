@@ -1,6 +1,8 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.SysCourseSigninMapper;
@@ -15,13 +17,15 @@ import com.ruoyi.system.service.ISysCourseSigninService;
 @Service
 public class SysCourseSigninServiceImpl implements ISysCourseSigninService 
 {
+    private static final Logger log = LoggerFactory.getLogger(SysCourseSigninServiceImpl.class);
+    
     @Autowired
     private SysCourseSigninMapper signinMapper;
 
     @Override
-    public SysCourseSignin selectCourseSigninById(Long id)
+    public SysCourseSignin selectCourseSigninById(Long signinId)
     {
-        return signinMapper.selectCourseSigninById(id);
+        return signinMapper.selectCourseSigninById(signinId);
     }
 
     @Override
@@ -33,7 +37,15 @@ public class SysCourseSigninServiceImpl implements ISysCourseSigninService
     @Override
     public int insertCourseSignin(SysCourseSignin signin)
     {
-        return signinMapper.insertCourseSignin(signin);
+        log.info("准备插入签到记录: {}", signin);
+        try {
+            int result = signinMapper.insertCourseSignin(signin);
+            log.info("插入签到记录结果: {}", result);
+            return result;
+        } catch (Exception e) {
+            log.error("插入签到记录失败", e);
+            throw new RuntimeException("插入签到记录失败: " + e.getMessage(), e);
+        }
     }
 
     @Override
@@ -43,15 +55,15 @@ public class SysCourseSigninServiceImpl implements ISysCourseSigninService
     }
 
     @Override
-    public int deleteCourseSigninById(Long id)
+    public int deleteCourseSigninById(Long signinId)
     {
-        return signinMapper.deleteCourseSigninById(id);
+        return signinMapper.deleteCourseSigninById(signinId);
     }
 
     @Override
-    public int deleteCourseSigninByIds(Long[] ids)
+    public int deleteCourseSigninByIds(Long[] signinIds)
     {
-        return signinMapper.deleteCourseSigninByIds(ids);
+        return signinMapper.deleteCourseSigninByIds(signinIds);
     }
 
     @Override

@@ -26,6 +26,7 @@ export function addSignin(data) {
   })
 }
 
+
 // 修改签到
 export function updateSignin(data) {
   return request({
@@ -45,16 +46,44 @@ export function delSignin(id) {
 
 // 用户签到
 export function doSignin(id) {
+  console.log("调用用户签到接口，签到ID:", id, "类型:", typeof id);
+  if (id === undefined || id === null) {
+    return Promise.reject(new Error("签到ID不能为空"));
+  }
+  
+  // 确保ID是数字类型
+  const numericId = Number(id);
+  if (isNaN(numericId)) {
+    return Promise.reject(new Error("签到ID必须是数字"));
+  }
+  
   return request({
-    url: '/system/signin/doSignin/' + id,
+    url: '/system/signin/doSignin/' + numericId,
     method: 'post'
-  })
+  }).catch(error => {
+    console.error("用户签到接口调用失败:", error);
+    throw error;
+  });
 }
 
 // 查看签到结果
 export function getResult(id) {
+  console.log("调用查看签到结果接口，签到ID:", id, "类型:", typeof id);
+  if (id === undefined || id === null) {
+    return Promise.reject(new Error("签到ID不能为空"));
+  }
+  
+  // 确保ID是数字类型
+  const numericId = Number(id);
+  if (isNaN(numericId)) {
+    return Promise.reject(new Error("签到ID必须是数字"));
+  }
+  
   return request({
-    url: '/system/signin/result/' + id,
+    url: '/system/signin/result/' + numericId,
     method: 'get'
-  })
+  }).catch(error => {
+    console.error("查看签到结果接口调用失败:", error);
+    throw error;
+  });
 }
